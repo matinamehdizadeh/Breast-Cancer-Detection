@@ -2,7 +2,7 @@
 
 Implemented a self supervised method
 based on multiple magnifications of images and apply histopathology augmentations, which
-reached state-of-the-art results in detecting malignant tumors on BreahHis dataset
+reached state-of-the-art results in detecting malignant tumors on BreahHis dataset.
 # Requirement
 This repository code is compaitible with Python 3.6 and 3.8, Pytorch 1.2.0, and Torchvision 0.4.0.
 
