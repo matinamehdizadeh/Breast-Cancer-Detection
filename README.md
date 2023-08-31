@@ -1,4 +1,4 @@
-# Breast Cancer Detection
+# Classification of Breast Cancer Histopathology Images using a Modified Supervised Contrastive Learning Method
 
 Implemented a self supervised method
 based on multiple magnifications of images and apply histopathology augmentations, which
