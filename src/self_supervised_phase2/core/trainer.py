@@ -34,7 +34,7 @@ class Trainer:
         self.optimizer = optimizer
         self.previous_model = model
         self.current_model = model
-        self.criterion = sup_con_mod_rlx.SupConLoss(gpu=gpu, temperature=0.1)
+        self.criterion = sup_con_mod_rlx.SupConModRLX(gpu=gpu, temperature=0.1)
         self.scheduler = scheduler
         self.gpu = gpu
 
