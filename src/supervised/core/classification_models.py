@@ -1,5 +1,3 @@
-'''Author- Prakash Chandra Chhipa, Email- prakash.chandra.chhipa@ltu.se, Year- 2022'''
-
 from numpy.core.numeric import outer
 import torchvision.models as models
 import torch.nn as nn
@@ -9,7 +7,7 @@ from efficientnet_pytorch import EfficientNet
 from torch.autograd import Function
 import sys
 import numpy as np
-sys.path.append('/content/drive/MyDrive/matinaMehdizadeh/Magnification-Prior-Self-Supervised-Method-main/src/')
+sys.path.append('~/matinaMehdizadeh/Magnification-Prior-Self-Supervised-Method-main/src/')
 from supervised.core.models import EfficientNet_Model
 from self_supervised.core.models import EfficientNet_MLP
 from supervised.apply.transform import train_transform, resize_transform2
@@ -20,7 +18,6 @@ class domain_predictor(torch.nn.Module):
   def __init__(self, n_centers, l1, l2, l3):
     super(domain_predictor, self).__init__()
     self.n_centers = n_centers
-    #self.rfc1 = nn.Linear(1408, 512)
     self.rfc1 = nn.Linear(1408, l1)
     self.rfc2 = nn.Linear(l1, l2)
     self.rfc3 = nn.Linear(l2, l3)	
@@ -61,13 +58,14 @@ class ReverseLayerF(Function):
 		return output, None
 
 class classifier(torch.nn.Module):
-    def __init__(self, l1, l2, l3, prob, path='', device='cuda:0'):
+    def __init__(self, l1, l2, l3, prob, path='', device='cuda:9'):
         #super(EfficientNet_Model, self).__init__()
         super(classifier, self).__init__()
         self.prob = prob
         self.efficient = EfficientNet_Model(pretrained=False)
         # 2. Initialized and load SSL pretraiend model which include backbone, MLP, and head
         pretrained_model = EfficientNet_MLP()
+       # comment next line for test
         pretrained_model.load_state_dict(torch.load(path, map_location=device))
         # 3. Use backbone part of pretrained model
         self.efficient.model = pretrained_model.backbone
@@ -78,12 +76,9 @@ class classifier(torch.nn.Module):
         l3 = np.power(2, l3)
         self.rfc1 = nn.Linear(1408, l1)
         self.rfc2 = nn.Linear(l1, l2)
-        self.rfc3 = nn.Linear(l2, l3)
-        #self.alexnet = models.alexnet(pretrained=True).classifier
-        
+        self.rfc3 = nn.Linear(l2, l3)        
         self.final_fc2 = nn.Sequential(nn.Dropout(self.prob), nn.Linear(l3, 1))
         self.sig = nn.Sigmoid()
-        #self.model.fc=nn.Linear(512,num_classes)
         self.domain_predictor = domain_predictor(6, l1, l2, l3)
 
 
@@ -111,7 +106,6 @@ class classifier(torch.nn.Module):
         out = F.relu(out) 
         out = F.dropout(out, p=self.prob)
         out = self.rfc3(out)
-        #out = self.alexnet(out)
         out = F.relu(out) 
         output = self.sig(self.final_fc2(out))  
         

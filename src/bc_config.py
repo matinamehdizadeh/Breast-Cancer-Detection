@@ -1,14 +1,13 @@
 
-'''Author- Prakash Chandra Chhipa, Email- prakash.chandra.chhipa@ltu.se, Year- 2022'''
-
 import torch
 
-batch_size = 8
+batch_size = 14
 num_workers = 1
 epoch = 200
 #Binary labels
 binary_label_B = 'B'
 binary_label_M = 'M'
+OP = 'OP'
 
 #Multi labels
 multi_label_A = 'A'
@@ -37,19 +36,10 @@ data_path_fold4 = dataset_path + '/Fold_4_5/'
 
 result_path = '/results_bc_5fold/'
 tensorboard_path = '/tensorboard_bc_5fold/'
-#evaluation_path_supervised = '/evaluation/supervised_finetuned_80/'
-#evaluation_path_self_supervised = '/evaluation/self_supervised/'
-#evaluation_path_transfer_learning = '/evaluation/supervised_finetuned_20/'
 
 #GPU
 gpu0 = torch.device("cuda:0")
-gpu1 = torch.device("cuda:1")
-gpu2 = torch.device("cuda:2")
-gpu3 = torch.device("cuda:3")
-gpu4 = torch.device("cuda:4")
-gpu5 = torch.device("cuda:5")
-gpu6 = torch.device("cuda:6")
-gpu7 = torch.device("cuda:7")
+
 
 #magnification
 X40 = '40X'

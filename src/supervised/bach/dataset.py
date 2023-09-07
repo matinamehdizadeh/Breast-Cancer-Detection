@@ -26,11 +26,10 @@ import albumentations as A
 from skimage import io
 import numpy as np
 import sys
-sys.path.append('/content/drive/MyDrive/matinaMehdizadeh/Magnification-Prior-Self-Supervised-Method-main/src/')
+sys.path.append('~/matinaMehdizadeh/Magnification-Prior-Self-Supervised-Method-main/src/')
 
 from supervised.apply import config
 from Randaugment.randaugment import distort_image_with_randaugment
-from self_supervised.apply.elastic_deformation import elastic_transform
 
 import bc_config
 
@@ -65,9 +64,6 @@ class BreakHis_Dataset(nn.Module):
             else:
               binary_label = 'M'
 
-
-            
-            
             #record keeping for 40X images
             path_40x = train_path + patient_dir_name +'/'
             for image_name in os.listdir(path_40x):
@@ -112,12 +108,6 @@ class BreakHis_Dataset(nn.Module):
         if None != self.augmentation_strategy:
             for mg_level in list(item_dict.keys()):
                 torch.set_rng_state(state)
-                
-                # numberAug = random.randint(1, 100)
-                # if numberAug < 30:
-                #   elasticArg1 = np.array(item_dict[mg_level]).shape[1]
-                #   item_dict[mg_level] = elastic_transform(np.array(item_dict[mg_level]), elasticArg1 * 2, elasticArg1 * 0.08, elasticArg1 * 0.08)
-
                 numberAug = random.randint(1, 100)          
             
                 if numberAug < 30:

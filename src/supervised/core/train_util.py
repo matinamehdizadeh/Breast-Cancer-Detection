@@ -15,7 +15,7 @@ import torchvision.transforms as transforms
 from sklearn.utils import class_weight
 from sklearn.metrics import f1_score, matthews_corrcoef, classification_report, confusion_matrix, accuracy_score
 import sys
-sys.path.append('/content/drive/MyDrive/matinaMehdizadeh/Magnification-Prior-Self-Supervised-Method-main/src/')
+sys.path.append('~/matinaMehdizadeh/Magnification-Prior-Self-Supervised-Method-main/src/')
 from supervised.apply.utils import *
 from supervised.core.classification_models import classifier
 from supervised.core.rmseLoss import RMSELoss
@@ -288,6 +288,8 @@ class Train_Util:
                 result_path = f"{bc_config.result_path}{self.experiment_description}"
                 Path(result_path).mkdir(parents=True, exist_ok=True)
                 torch.save(self.model.state_dict(), f"{result_path}/_{epoch}_{val_weighted_f1}.pth")
+                self.scheduler.step(val_loss)
+
             elif (best_train < weighted_f1) and (best_f1 <= val_weighted_f1):
                 best_train = weighted_f1
                 best_f1 = val_weighted_f1
@@ -296,11 +298,11 @@ class Train_Util:
                 torch.save(self.model.state_dict(), f"{result_path}/_{epoch}_{val_weighted_f1}.pth")
 
 
-                # file_object = open('sample.txt', 'a')
-                # file_object.write('\n')
-                # file_object.write(str(best_f1))
-                # file_object.close()
-            self.scheduler.step(val_loss)
+                file_object = open('sample.txt', 'a')
+                file_object.write('\n')
+                file_object.write(str(best_f1))
+                file_object.close()
+                self.scheduler.step(val_loss)
 
             #Tensorboard
             self.writer.add_scalar('Loss/Validation_Set', val_loss, epoch)

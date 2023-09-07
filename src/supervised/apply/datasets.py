@@ -1,5 +1,3 @@
-'''Author- Prakash Chandra Chhipa, Email- prakash.chandra.chhipa@ltu.se, Year- 2022'''
-
 import os
 import torch
 import cv2
@@ -26,11 +24,10 @@ import albumentations as A
 from skimage import io
 import numpy as np
 import sys
-sys.path.append('/content/drive/MyDrive/matinaMehdizadeh/Magnification-Prior-Self-Supervised-Method-main/src/')
+sys.path.append('~/matinaMehdizadeh/Magnification-Prior-Self-Supervised-Method-main/src/')
 
 from supervised.apply import config
 from Randaugment.randaugment import distort_image_with_randaugment
-from self_supervised.apply.elastic_deformation import elastic_transform
 
 import bc_config
 
@@ -59,15 +56,20 @@ class BreakHis_Dataset(nn.Module):
         self.label_binary_dict = {}
         self.label_multi_dict = {}
 
-        for patient_dir_name in os.listdir(train_path):
-            patient_uid = patient_dir_name.split('-')[1]
-            binary_label = patient_dir_name.split('_')[1]
-            multi_label = patient_dir_name.split('_')[2]
+        f = open(train_path, "r")
+      
+        for patient_dir_name in f.readlines():
+            patient_dir_name = patient_dir_name.strip()
+            patient_dir = patient_dir_name.split('/')[-1]
+            patient_uid = patient_dir.split('-')[1]
+            binary_label = patient_dir.split('_')[1]
+            multi_label = patient_dir.split('_')[2]
+
 
             
             
             #record keeping for 40X images
-            path_40x = train_path + patient_dir_name + '/40X/'
+            path_40x = patient_dir_name + '/40X/'
             for image_name in os.listdir(path_40x):
                 image_seq = image_name.split('.')[0].split('-')[4]
                 self.image_dict_40x[patient_uid+'_'+ image_seq] = path_40x + image_name
@@ -77,7 +79,7 @@ class BreakHis_Dataset(nn.Module):
                 self.label_multi_dict[patient_uid+'_'+ image_seq] = multi_label
             
             #record keeping for 100X images
-            path_100x = train_path + patient_dir_name + '/100X/'
+            path_100x = patient_dir_name + '/100X/'
             for image_name in os.listdir(path_100x):
                 image_seq = image_name.split('.')[0].split('-')[4]
                 self.image_dict_100x[patient_uid+'_'+ image_seq] = path_100x + image_name
@@ -86,7 +88,7 @@ class BreakHis_Dataset(nn.Module):
                 self.label_multi_dict[patient_uid+'_'+ image_seq] = multi_label
 
             #record keeping for 200X images
-            path_200x = train_path + patient_dir_name + '/200X/'
+            path_200x = patient_dir_name + '/200X/'
             for image_name in os.listdir(path_200x):
                 image_seq = image_name.split('.')[0].split('-')[4]
                 self.image_dict_200x[patient_uid+'_'+ image_seq] = path_200x + image_name
@@ -95,7 +97,7 @@ class BreakHis_Dataset(nn.Module):
                 self.label_multi_dict[patient_uid+'_'+ image_seq] = multi_label
 
             #record keeping for 400X images
-            path_400x = train_path + patient_dir_name + '/400X/'
+            path_400x = patient_dir_name + '/400X/'
             for image_name in os.listdir(path_400x):
                 image_seq = image_name.split('.')[0].split('-')[4]
                 self.image_dict_400x[patient_uid+'_'+ image_seq] = path_400x + image_name
@@ -154,11 +156,6 @@ class BreakHis_Dataset(nn.Module):
             
             for mg_level in list(item_dict.keys()):
                 torch.set_rng_state(state)
-                
-                # numberAug = random.randint(1, 100)
-                # if numberAug < 30:
-                #   elasticArg1 = np.array(item_dict[mg_level]).shape[1]
-                # #   item_dict[mg_level] = elastic_transform(np.array(item_dict[mg_level]), elasticArg1 * 2, elasticArg1 * 0.08, elasticArg1 * 0.08)
 
                 numberAug = random.randint(1, 100)          
             

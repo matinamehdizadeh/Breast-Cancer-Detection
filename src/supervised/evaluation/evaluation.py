@@ -19,13 +19,14 @@ from torchvision.transforms import transforms
 
 from sklearn.metrics import f1_score,matthews_corrcoef
 import sys
-sys.path.append('/content/drive/MyDrive/matinaMehdizadeh/Magnification-Prior-Self-Supervised-Method-main/src/')
+sys.path.append('~/matinaMehdizadeh/Magnification-Prior-Self-Supervised-Method-main/src/')
 
 from supervised.core.models import EfficientNet_Model
 from self_supervised.core.models import EfficientNet_MLP
 
 
 from supervised.apply.datasets import get_BreakHis_data_loader, get_BreakHis_testdata_loader
+#for bach test uncomment the next line
 #from supervised.bach.dataset import get_BreakHis_data_loader, get_BreakHis_testdata_loader
 from supervised.apply.transform import resize_transform
 from supervised.core.train_util import Train_Util
@@ -59,8 +60,6 @@ def get_metrics_from_confusion_matrix(confusion_matrix_epoch):
         return (
          epoch_avg_f1_manual, epoch_acc_manual, epoch_classwise_precision_manual_cpu, epoch_classwise_recall_manual_cpu, epoch_classwise_f1_manual_cpu,
           epoch_bal_acc_manual_cpu, epoch_dice_manual_cpu, epoch_TPR_manual_cpu, epoch_FPR_manual_cpu, epoch_kappa_manual_cpu)
-
-        # return epoch_avg_f1_manual, epoch_acc_manual, epoch_classwise_precision_manual_cpu, epoch_classwise_recall_manual_cpu, epoch_classwise_f1_manual_cpu
 
 
 def test(model, test_loader, device, threshold, magnification):
@@ -122,7 +121,7 @@ def test(model, test_loader, device, threshold, magnification):
         weighted_f1, accuracy, classwise_precision, classwise_recall, classwise_f1, bal_acc, dice, tpr, fpr, kappa = get_metrics_from_confusion_matrix(confusion_matrix_val)
 
 
-        print('MPCS pretrained fine-tuned on validation set: ')
+        print('pretrained fine-tuned on validation set: ')
         print('Testset classwise precision', classwise_precision)
         print('Testset classwise recall', classwise_recall)
         print('Testset classwise f1', classwise_f1)
@@ -147,7 +146,7 @@ def test(model, test_loader, device, threshold, magnification):
 def test_model(data_path, magnification, model_path):
 
     threshold = 0.5
-    device = "cuda:0"
+    device = "cuda:9"
     model_path = model_path
     magnification = magnification
     data_path = data_path
@@ -158,17 +157,10 @@ def test_model(data_path, magnification, model_path):
 
     model = classifier(10,13,11,0, model_path, device)
     model.load_state_dict(torch.load(model_path))
-    #pretrained_model = EfficientNet_MLP()
-    # pretrained_model.load_state_dict(torch.load('/results_bc/selfSupervised1/epoch_158_loss_0.13900840824300592.pth', map_location=device))
-    # model.efficient.model = pretrained_model.backbone
     model = model.to(device)
 
 
     test(model=model, test_loader=test_loader, device=device, threshold=threshold, magnification = magnification)
-
-
-
-
 
 
 
@@ -182,10 +174,7 @@ if __name__ == "__main__":
         '--magnification', type=str, required=True, help='Choose magnification for model fine-tuning, Example - 40x'
     )
     parser.add_argument(
-        '--model_path', type=str, required=True, help='The path for MPCS pretrained model'
+        '--model_path', type=str, required=True, help='The path for pretrained model'
     )
-    # parser.add_argument(
-    #     '--description', type=str, required=False, help=' provide experiment description'
-    # )
     args = parser.parse_args()
     test_model(args.test_data_fold, args.magnification, args.model_path)

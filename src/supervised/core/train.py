@@ -15,27 +15,11 @@ import torchvision.transforms as transforms
 from sklearn.utils import class_weight
 from sklearn.metrics import f1_score, matthews_corrcoef, classification_report, confusion_matrix, accuracy_score
 import sys
-sys.path.append('/content/drive/MyDrive/matinaMehdizadeh/Magnification-Prior-Self-Supervised-Method-main/src/')
+sys.path.append('~/matinaMehdizadeh/Magnification-Prior-Self-Supervised-Method-main/src/')
 from supervised.apply.utils import *
 from supervised.core.classification_models import classifier
 import bc_config
 
-
-    # def __init__(self, model_path, experiment_description, epochs, model, device, train_loader, val_loader, criterion, batch_size, scheduler, num_classes, writer, threshold = 0.2):
-    #     self.experiment_description = experiment_description
-    #     self.epochs = epochs
-    #     self.model = None
-    #     self.device = device
-    #     self.train_loader = train_loader
-    #     self.val_loader = val_loader
-    #     # self.optimizer = optimizer
-    #     self.model_path = model_path
-    #     self.criterion = criterion
-    #     self.batch_size = batch_size
-    #     self.scheduler = scheduler
-    #     self.writer = writer
-    #     self.num_classes = num_classes
-    #     self.threshold = threshold
 file2 = open("file.txt", "r")
 
 weights = file2.read()
@@ -126,40 +110,6 @@ def evaluate_validation_set():
     print(f'{self.experiment_description}: Validation Weighted F1', weighted_f1)
     print(f'{self.experiment_description}: Validation Accuracy', accuracy)
     return (weighted_f1, accuracy, classwise_precision, classwise_recall, classwise_f1, val_loss_avg())
-
-
-# def test_model(self):
-#     confusion_matrix_val = torch.zeros(len(bc_config.binary_label_list), len(bc_config.binary_label_list))
-#     self.model.eval()
-#     val_loss_avg = Aggregator()
-#     with torch.no_grad():
-#         for _, magnification, item_dict, binary_label, multi_label in tqdm(self.val_loader):
-#             view = item_dict[magnification[0]]
-#             view = view.cuda(self.device, non_blocking=True)
-            
-            
-#             target = binary_label.to(self.device)
-
-#             outputs = self.model(view)
-#             outputs = outputs.squeeze(1)
-#             target = target.type_as(outputs)
-
-            
-#             predicted = (outputs > self.threshold).int()
-
-#             predicted = predicted.to(self.device)
-
-#             for targetx, predictedx in zip(target.view(-1), predicted.view(-1)):
-#                 confusion_matrix_val[(targetx.long(), predictedx.long())] += 1
-
-#     weighted_f1, accuracy, classwise_precision, classwise_recall, classwise_f1 = self.get_metrics_from_confusion_matrix(confusion_matrix_val)
-    
-#     print(f'{self.experiment_description}: Test classwise precision', classwise_precision)
-#     print(f'{self.experiment_description}: Test classwise recall', classwise_recall)
-#     print(f'{self.experiment_description}: Test classwise f1', classwise_f1)
-#     print(f'{self.experiment_description}: Test Weighted F1', weighted_f1)
-#     print(f'{self.experiment_description}: Test Accuracy', accuracy)
-#     return (weighted_f1, accuracy, classwise_precision, classwise_recall, classwise_f1)
 
 
 def test_class_probabilities(model, device, test_loader, which_class):

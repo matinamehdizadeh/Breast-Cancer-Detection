@@ -15,7 +15,7 @@ import torchvision.transforms as transforms
 from sklearn.utils import class_weight
 from sklearn.metrics import f1_score, matthews_corrcoef, classification_report, confusion_matrix, accuracy_score
 import sys
-sys.path.append('/content/drive/MyDrive/matinaMehdizadeh/Magnification-Prior-Self-Supervised-Method-main/src/')
+sys.path.append('~/matinaMehdizadeh/Magnification-Prior-Self-Supervised-Method-main/src/')
 from supervised.apply.utils import *
 from supervised.core import classifier
 import bc_config
