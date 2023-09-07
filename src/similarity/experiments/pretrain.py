@@ -1,7 +1,6 @@
 import argparse
 import logging
 import os, sys
-import bc_config
 
 import numpy as np
 from tqdm import tqdm
