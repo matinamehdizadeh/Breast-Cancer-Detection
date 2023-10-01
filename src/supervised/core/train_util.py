@@ -287,7 +287,7 @@ class Train_Util:
                 best_f1 = val_weighted_f1
                 result_path = f"{bc_config.result_path}{self.experiment_description}"
                 Path(result_path).mkdir(parents=True, exist_ok=True)
-                torch.save(self.model.state_dict(), f"{result_path}/_{epoch}_{val_weighted_f1}.pth")
+                torch.save(self.model.state_dict(), f"{result_path}/best.pth")
                 self.scheduler.step(val_loss)
 
             elif (best_train < weighted_f1) and (best_f1 <= val_weighted_f1):
@@ -295,7 +295,7 @@ class Train_Util:
                 best_f1 = val_weighted_f1
                 result_path = f"{bc_config.result_path}{self.experiment_description}"
                 Path(result_path).mkdir(parents=True, exist_ok=True)
-                torch.save(self.model.state_dict(), f"{result_path}/_{epoch}_{val_weighted_f1}.pth")
+                torch.save(self.model.state_dict(), f"{result_path}/best.pth")
 
 
                 file_object = open('sample.txt', 'a')

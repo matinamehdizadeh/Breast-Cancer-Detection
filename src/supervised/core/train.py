@@ -145,7 +145,7 @@ def train_and_evaluate(config):
             best_f1 = val_weighted_f1
             result_path = f"{bc_config.result_path}{self.experiment_description}"
             Path(result_path).mkdir(parents=True, exist_ok=True)
-            torch.save(model.state_dict(), f"{result_path}/_{epoch}_{val_weighted_f1}.pth")
+            torch.save(model.state_dict(), f"{result_path}/best.pth")
         
         scheduler.step(val_loss)
 

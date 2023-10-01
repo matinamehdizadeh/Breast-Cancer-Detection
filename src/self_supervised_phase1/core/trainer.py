@@ -111,18 +111,9 @@ class Trainer:
                         exist_ok=True)
             torch.save(
                 self.current_model.state_dict(),
-                f"{config.result_path+self.experiment_description}/epoch_{self.current_epoch}_loss_{self.loss_list[self.current_epoch]}.pth"
+                f"{config.result_path+self.experiment_description}/best.pth"
             )
             self.lowest_loss = self.loss_list[self.current_epoch]
-
-    def save_checkpoint(self):
-        os.makedirs(
-            f"{config.result_path+self.experiment_description}/checkpoints",
-            exist_ok=True)
-        torch.save(
-            self.current_model.state_dict(),
-            f"{config.result_path+self.experiment_description}/checkpoints/epoch_{self.current_epoch}_loss_{self.loss_list[self.current_epoch]}.pth"
-        )
 
     def train_epoch(self, gpu, current_epoch, epochs, batch_size, train_loader,
                             model, optimizer, criterion, weight):
