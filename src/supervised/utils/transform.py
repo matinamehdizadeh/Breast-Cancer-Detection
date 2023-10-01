@@ -3,7 +3,7 @@ from torchvision import transforms as t
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
 
-from self_supervised.apply import config
+from self_supervised_phase1.utils import config
 
 # Dataset input processing - trainset
 train_transform = t.Compose([

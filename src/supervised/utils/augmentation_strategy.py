@@ -6,7 +6,7 @@ sys.path.append('~/matinaMehdizadeh/Magnification-Prior-Self-Supervised-Method-m
 from torchvision import transforms
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
-from self_supervised.apply import config
+from self_supervised_phase1.utils import config
 
 ft_exp_augmentation = A.Compose([
         A.ColorJitter(0.4, 0.4, 0.4, 0.1, p=0.4),

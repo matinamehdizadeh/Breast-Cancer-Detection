@@ -28,7 +28,7 @@ import numpy as np
 import sys
 sys.path.append('~/matinaMehdizadeh/Magnification-Prior-Self-Supervised-Method-main/src/')
 
-from supervised.apply import config
+from supervised.utils import config
 from Randaugment.randaugment import distort_image_with_randaugment
 
 import bc_config

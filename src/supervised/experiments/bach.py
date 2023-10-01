@@ -26,10 +26,10 @@ sys.path.append('~/matinaMehdizadeh/Magnification-Prior-Self-Supervised-Method-m
 from efficientnet_pytorch.utils import MemoryEfficientSwish 
 from supervised.core.classification_models import classifier
 from supervised.bach.datasets import get_BreakHis_data_loader,get_BreakHis_testdata_loader 
-from supervised.apply.transform import train_transform, resize_transform
-from supervised.apply.augmentation_strategy import ft_exp_augmentation
+from supervised.utils.transform import train_transform, resize_transform
+from supervised.utils.augmentation_strategy import ft_exp_augmentation
 from supervised.core.models import EfficientNet_Model
-from self_supervised.core.models import EfficientNet_MLP
+from self_supervised_phase1.core.models import EfficientNet_MLP
 from supervised.core.train_util import Train_Util
 import bc_config
 from Randaugment.randaugment import distort_image_with_randaugment
@@ -43,7 +43,7 @@ def finetune_Effnet_b2(train_data_fold, test_data_fold, magnification, pretraine
     
     weight_decay = 5e-3        
     threshold = 0.5 #0.5
-    device = 'cuda:9'
+    device = 'cuda:0'
     percent = percent
     
     train_loader = get_BreakHis_data_loader(train_data_fold, transform=train_transform, augmentation_strategy=ft_exp_augmentation, pre_processing=[], image_type_list=[magnification], percent=percent)
@@ -85,7 +85,7 @@ def finetune_Effnet_b2(train_data_fold, test_data_fold, magnification, pretraine
 
     
 if __name__ == "__main__":
-    print('BreakHis Breast Cancer Dataset - Finetuning for pretrained network')
+    print('BACH Dataset - Finetuning for pretrained network')
 
     # Create parser and parse input
     parser = argparse.ArgumentParser()

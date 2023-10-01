@@ -16,7 +16,7 @@ from sklearn.utils import class_weight
 from sklearn.metrics import f1_score, matthews_corrcoef, classification_report, confusion_matrix, accuracy_score
 import sys
 sys.path.append('~/matinaMehdizadeh/Magnification-Prior-Self-Supervised-Method-main/src/')
-from supervised.apply.utils import *
+from supervised.utils.utils import *
 from supervised.core.classification_models import classifier
 from supervised.core.rmseLoss import RMSELoss
 import bc_config

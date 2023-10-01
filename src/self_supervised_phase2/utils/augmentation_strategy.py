@@ -7,7 +7,7 @@ from albumentations.pytorch import ToTensorV2
 
 
 
-pretrain_augmentation = A.Compose([
+train_augmentation = A.Compose([
         A.RandomResizedCrop(height=460,width=700, p=0.3),
         A.ColorJitter(0.4, 0.4, 0.4, 0.1, p=0.3),
         A.GaussianBlur((3, 3), (0.1, 2.0), p=0.3),
@@ -17,7 +17,7 @@ pretrain_augmentation = A.Compose([
         ])
 
 
-pretrain_augmentation_original = A.Compose([
+train_augmentation_original = A.Compose([
         A.RandomResizedCrop(height=460,width=700, p=0.8),
         A.ColorJitter(0.4, 0.4, 0.4, 0.1, p=0.4),
         A.GaussianBlur((3, 3), (0.1, 2.0), p=0.3),

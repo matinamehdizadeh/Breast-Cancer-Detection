@@ -1,17 +1,18 @@
-import argparse
+import os,sys
 import logging
-import numpy as np
-import torch.nn as nn
-import torch
+from os import get_exec_path
+logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 from tqdm import tqdm
-import os, copy
-from pathlib import Path
+import numpy as np
+import torch
 import sys
+import tensorflow
 sys.path.append('/content/drive/MyDrive/matinaMehdizadeh/Magnification-Prior-Self-Supervised-Method-main/src/')
 
-from self_supervised.apply import config
-from self_supervised.core import pretrain
-from self_supervised.core import conLoss
+from similarity.utils import config
+sys.path.append(os.path.dirname(__file__))
+from similarity.utils import config
+from similarity.core import conLoss
 from torch.utils.tensorboard import SummaryWriter
 
 import logging
@@ -61,7 +62,7 @@ class Trainer:
             self.current_epoch = epoch
             self.previous_model = self.current_model
 
-            epoch_response_dir = pretrain.pretrain_epoch(
+            epoch_response_dir = self.train_epoch(
                 gpu = self.gpu,
                 current_epoch=self.current_epoch,
                 epochs=self.epochs,
@@ -122,3 +123,38 @@ class Trainer:
             self.current_model.state_dict(),
             f"{config.result_path+self.experiment_description}/checkpoints/epoch_{self.current_epoch}_loss_{self.loss_list[self.current_epoch]}.pth"
         )
+
+
+    def train_epoch(self, gpu, current_epoch, epochs, batch_size, train_loader,
+                            model, optimizer, criterion, weight):
+
+        model.train()
+        total_loss = 0
+        epoch_response_dir = {}
+        with tqdm(total=batch_size * len(train_loader),
+                desc=f'Epoch {current_epoch}/{epochs}',
+                unit='img') as (pbar):
+            for idx, batch in enumerate(train_loader):
+                view1, label, label2, view2, p1, p2, mag = batch[0], batch[1], batch[2], batch[3], batch[4], batch[5], batch[6]
+                b, c, h, w = view1.size()
+                #for pytorch tranform
+                view1 = view1.cuda(gpu, non_blocking=True)
+                view2 = view2.cuda(gpu, non_blocking=True)
+                
+                output_view1 = model(view1)
+                output_view2 = model(view2)
+
+                label = np.array(label)
+                loss = criterion(output_view1, output_view2, label, label2, weight, p1, p2, mag)
+                '''logging'''
+                #logging.info('minibatch: {idx} simCLR running_loss: {loss.item()}')
+                (pbar.set_postfix)(**{'loss (batch)': loss.item()})
+                pbar.update(view1.shape[0])
+
+
+            # Prepare epoch reponse and return
+            epoch_response_dir['model'] = model
+            epoch_response_dir['loss'] = total_loss/(batch_size*len(train_loader))
+            epoch_response_dir['image_pair'] = [view1, view2]
+
+        return epoch_response_dir

@@ -14,9 +14,8 @@ import sys
 sys.path.append('/content/drive/MyDrive/matinaMehdizadeh/Magnification-Prior-Self-Supervised-Method-main/src/')
 
 sys.path.append(os.path.dirname(__file__))
-from self_supervised.core import models, pretrain, trainer, sup_con_mod
-from self_supervised.apply import datasets, config, transform, augmentation_strategy
-from self_supervised.bach import dataset
+from similarity.core import models, trainer, conLoss
+from similarity.utils import config, transform, augmentation_strategy, sim
 sys.path.append(os.path.dirname(__file__))
 os.environ["KMP_WARNINGS"] = "FALSE"
 
@@ -36,17 +35,17 @@ def Effnet_b2(data_fold, LR, epoch, description, model_path=None):
     
     # Load BreakHis dataset
     
-    train_loader = datasets.get_BreakHis_trainset_loader(
+    train_loader = sim.get_BreakHis_trainset_loader(
         train_path=fold_root,
         training_method='simCLR',
         transform = transform.resize_transform,
-        augmentation_strategy = augmentation_strategy.pretrain_augmentation,
+        augmentation_strategy = augmentation_strategy.train_augmentation,
         pre_processing= [],
         image_pair=[40,100,200,400],
         pair_sampling_strategy = pair_sampling)
     
         
-    # Get network for pretraining with MLP head
+    # Get network for training with MLP head
     model = models.EfficientNet_MLP(features_dim=2048, v='b2', mlp_dim=2048)
     if path is not None:
       print('load')
@@ -61,7 +60,7 @@ def Effnet_b2(data_fold, LR, epoch, description, model_path=None):
                                                      factor=0.1,
                                                      patience=50,
                                                      min_lr=5e-4)
-    criterion = sup_con_mod.SupConMod(gpu=GPU, temperature=0.1)
+    criterion = conLoss.ConLoss(gpu=GPU, temperature=0.1)
     epochs = no_epoch
 
     experiment_description = description
@@ -82,13 +81,13 @@ def Effnet_b2(data_fold, LR, epoch, description, model_path=None):
 
 if __name__ == '__main__':
     
-    print("self-supervised pretraining...")
+    print("self-supervised training...")
     
     # Create parser and parse input
     parser = argparse.ArgumentParser()
     
     parser.add_argument(
-        '--data_fold', type=str, required=True, help='The path for fold of dataset to pretrain on'
+        '--data_fold', type=str, required=True, help='The path for fold of dataset to train on'
     )
     parser.add_argument(
         '--LR', type=float, required=False, default=0.00001, help='Learning Rate'
@@ -103,5 +102,5 @@ if __name__ == '__main__':
         '--model_path', type=str, required=False, help=' provide experiment description'
     )
     args = parser.parse_args()
-    #ssl pretraining call
+    #ssl training call
     Effnet_b2(args.data_fold, args.LR, args.epoch, args.description, args.model_path)

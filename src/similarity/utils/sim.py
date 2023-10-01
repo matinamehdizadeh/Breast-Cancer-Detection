@@ -28,11 +28,10 @@ import sys
 
 from torchvision.transforms.autoaugment import RandAugment
 sys.path.append('/content/drive/MyDrive/matinaMehdizadeh/Magnification-Prior-Self-Supervised-Method-main/src/')
-from self_supervised.apply import config
-from supervised.apply.cutMix import generate_cutmix_image
+from similarity.utils import config
 from Randaugment.randaugment import distort_image_with_randaugment
 
-from self_supervised.apply.augmentation_strategy import pretrain_augmentation_original
+from similarity.utils.augmentation_strategy import train_augmentation_original
 import random
 import bc_config
 
@@ -106,7 +105,7 @@ class BreakHis_Dataset_SSL(nn.Module):
         f.close()
         self.augmentation_strategy_2 = distort_image_with_randaugment
         self.augmentation_strategy_1 = augmentation_strategy
-        self.augmentation_strategy_3 = pretrain_augmentation_original
+        self.augmentation_strategy_3 = train_augmentation_original
         self.image_pair = image_pair
         
         self.list_40X = list(self.image_dict_40x.keys())

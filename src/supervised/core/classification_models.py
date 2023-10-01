@@ -9,8 +9,8 @@ import sys
 import numpy as np
 sys.path.append('~/matinaMehdizadeh/Magnification-Prior-Self-Supervised-Method-main/src/')
 from supervised.core.models import EfficientNet_Model
-from self_supervised.core.models import EfficientNet_MLP
-from supervised.apply.transform import train_transform, resize_transform2
+from self_supervised_phase1.core.models import EfficientNet_MLP
+from supervised.utils.transform import train_transform, resize_transform2
 
 
 class domain_predictor(torch.nn.Module):
@@ -58,7 +58,7 @@ class ReverseLayerF(Function):
 		return output, None
 
 class classifier(torch.nn.Module):
-    def __init__(self, l1, l2, l3, prob, path='', device='cuda:9'):
+    def __init__(self, l1, l2, l3, prob, path='', device='cuda:0'):
         #super(EfficientNet_Model, self).__init__()
         super(classifier, self).__init__()
         self.prob = prob

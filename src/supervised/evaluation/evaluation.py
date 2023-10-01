@@ -22,13 +22,13 @@ import sys
 sys.path.append('~/matinaMehdizadeh/Magnification-Prior-Self-Supervised-Method-main/src/')
 
 from supervised.core.models import EfficientNet_Model
-from self_supervised.core.models import EfficientNet_MLP
+from self_supervised_phase1.core.models import EfficientNet_MLP
 
 
-from supervised.apply.datasets import get_BreakHis_data_loader, get_BreakHis_testdata_loader
+from supervised.utils.datasets import get_BreakHis_data_loader, get_BreakHis_testdata_loader
 #for bach test uncomment the next line
 #from supervised.bach.dataset import get_BreakHis_data_loader, get_BreakHis_testdata_loader
-from supervised.apply.transform import resize_transform
+from supervised.utils.transform import resize_transform
 from supervised.core.train_util import Train_Util
 from supervised.core.classification_models import classifier
 
@@ -146,7 +146,7 @@ def test(model, test_loader, device, threshold, magnification):
 def test_model(data_path, magnification, model_path):
 
     threshold = 0.5
-    device = "cuda:9"
+    device = "cuda:0"
     model_path = model_path
     magnification = magnification
     data_path = data_path

@@ -14,9 +14,8 @@ import sys
 sys.path.append('/content/drive/MyDrive/matinaMehdizadeh/Magnification-Prior-Self-Supervised-Method-main/src/')
 
 sys.path.append(os.path.dirname(__file__))
-from self_supervised.core import models, pretrain, trainer, conLoss
-from self_supervised.apply import config, transform, augmentation_strategy, sim
-from self_supervised.bach import dataset
+from self_supervised_phase2.core import models, trainer, sup_con_mod_rlx
+from self_supervised_phase2.utils import config, transform, augmentation_strategy, simdata
 sys.path.append(os.path.dirname(__file__))
 os.environ["KMP_WARNINGS"] = "FALSE"
 
@@ -27,32 +26,31 @@ import argparse
 def Effnet_b2(data_fold, LR, epoch, description, model_path=None):
     
     fold_root = data_fold # gives the fold no. Example: bc_config.data_path_fold0 +'train_60/'
-    LR = float(LR) # 0.00001
+    LR = float(LR) 
     pair_sampling = bc_config.OP
-    no_epoch = int(epoch) # 150
+    no_epoch = int(epoch) 
     description = description # describe fold infomration, pair strategy - for better record keeping
     GPU = torch.device("cuda:0")
     path = model_path
     
     # Load BreakHis dataset
     
-    train_loader = sim.get_BreakHis_trainset_loader(
+    train_loader = simdata.get_BreakHis_trainset_loader(
         train_path=fold_root,
         training_method='simCLR',
         transform = transform.resize_transform,
-        augmentation_strategy = augmentation_strategy.pretrain_augmentation,
+        augmentation_strategy = augmentation_strategy.train_augmentation,
         pre_processing= [],
         image_pair=[40,100,200,400],
         pair_sampling_strategy = pair_sampling)
     
         
-    # Get network for pretraining with MLP head
+    # Get network for training with MLP head
     model = models.EfficientNet_MLP(features_dim=2048, v='b2', mlp_dim=2048)
     if path is not None:
       print('load')
       model.load_state_dict(torch.load(path, map_location=GPU))
     model = model.cuda(GPU)
-    
 
     # Configure optimizer, schedular, loss, other configurations
     optimizer = optim.Adam(model.parameters(), lr=LR)
@@ -61,8 +59,7 @@ def Effnet_b2(data_fold, LR, epoch, description, model_path=None):
                                                      factor=0.1,
                                                      patience=50,
                                                      min_lr=5e-4)
-    #criterion = ssl_loss.SimCLR_loss(gpu=GPU, temperature=0.1)
-    criterion = conLoss.ConLoss(gpu=GPU, temperature=0.1)
+    criterion = sup_con_mod_rlx.SupConModRLX(gpu=GPU, temperature=0.1)
     epochs = no_epoch
 
     experiment_description = description
@@ -83,13 +80,13 @@ def Effnet_b2(data_fold, LR, epoch, description, model_path=None):
 
 if __name__ == '__main__':
     
-    print("self-supervised pretraining...")
+    print("self-supervised training...")
     
     # Create parser and parse input
     parser = argparse.ArgumentParser()
     
     parser.add_argument(
-        '--data_fold', type=str, required=True, help='The path for fold of dataset to pretrain on'
+        '--data_fold', type=str, required=True, help='The path for fold of dataset to train on'
     )
     parser.add_argument(
         '--LR', type=float, required=False, default=0.00001, help='Learning Rate'
@@ -104,5 +101,5 @@ if __name__ == '__main__':
         '--model_path', type=str, required=False, help=' provide experiment description'
     )
     args = parser.parse_args()
-    #ssl pretraining call
+    #ssl training call
     Effnet_b2(args.data_fold, args.LR, args.epoch, args.description, args.model_path)
