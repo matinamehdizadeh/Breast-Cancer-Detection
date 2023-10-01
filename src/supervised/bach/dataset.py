@@ -33,7 +33,7 @@ from Randaugment.randaugment import distort_image_with_randaugment
 
 import bc_config
 
-class BreakHis_Dataset(nn.Module):
+class BACH_Dataset(nn.Module):
 
     def __init__(self, train_path, transform = None, augmentation_strategy = None, pre_processing = [], image_type_list = []):
 
@@ -126,8 +126,8 @@ class BreakHis_Dataset(nn.Module):
         
         return patient_id, magnification, item_dict, bc_config.binary_label_dict[self.label_binary_dict[self.image_list[index]]], 1
 
-def get_BreakHis_data_loader(dataset_path, transform = None, augmentation_strategy = None, pre_processing = None, image_type_list=[], percent = 1):
-    dataset = BreakHis_Dataset(train_path = dataset_path, transform = transform, augmentation_strategy = augmentation_strategy, pre_processing = pre_processing, image_type_list = image_type_list)
+def get_BACH_data_loader(dataset_path, transform = None, augmentation_strategy = None, pre_processing = None, image_type_list=[], percent = 1):
+    dataset = BACH_Dataset(train_path = dataset_path, transform = transform, augmentation_strategy = augmentation_strategy, pre_processing = pre_processing, image_type_list = image_type_list)
     print(len(dataset))
     dataset_final, _ = random_split(dataset, (int(len(dataset)*percent), int(len(dataset)) - int(len(dataset)*percent)))
     print(len(dataset_final))
@@ -136,7 +136,7 @@ def get_BreakHis_data_loader(dataset_path, transform = None, augmentation_strate
     loader = DataLoader(dataset_final, batch_size=config.batch_size, num_workers=1, shuffle=True)
     return loader
 
-def get_BreakHis_testdata_loader(dataset_path, transform = None, pre_processing = None, image_type_list=[]):
-    dataset = BreakHis_Dataset(dataset_path, transform = transform, augmentation_strategy = None, pre_processing=pre_processing, image_type_list = image_type_list)
+def get_BACH_testdata_loader(dataset_path, transform = None, pre_processing = None, image_type_list=[]):
+    dataset = BACH_Dataset(dataset_path, transform = transform, augmentation_strategy = None, pre_processing=pre_processing, image_type_list = image_type_list)
     loader = DataLoader(dataset, batch_size=config.batch_size, shuffle=False, num_workers=1)
     return loader

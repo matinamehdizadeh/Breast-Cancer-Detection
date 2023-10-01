@@ -26,8 +26,7 @@ from self_supervised_phase1.core.models import EfficientNet_MLP
 
 
 from supervised.utils.datasets import get_BreakHis_data_loader, get_BreakHis_testdata_loader
-#for bach test uncomment the next line
-#from supervised.bach.dataset import get_BreakHis_data_loader, get_BreakHis_testdata_loader
+from supervised.bach.dataset import get_BACH_data_loader, get_BACH_testdata_loader
 from supervised.utils.transform import resize_transform
 from supervised.core.train_util import Train_Util
 from supervised.core.classification_models import classifier
@@ -143,7 +142,7 @@ def test(model, test_loader, device, threshold, magnification):
         print('patient level Dice', dice_patient)
         return weighted_f1, accuracy,classwise_precision,classwise_recall,classwise_f1
 
-def test_model(data_path, magnification, model_path):
+def test_model(data_path, magnification, model_path, dataset_name):
 
     threshold = 0.5
     device = "cuda:0"
@@ -152,9 +151,10 @@ def test_model(data_path, magnification, model_path):
     data_path = data_path
 
 
-
-    test_loader = get_BreakHis_testdata_loader(data_path, transform = resize_transform,pre_processing=[], image_type_list= [magnification])
-
+    if dataset_name == "Breakhis":
+        test_loader = get_BreakHis_testdata_loader(data_path, transform = resize_transform,pre_processing=[], image_type_list= [magnification])
+    elif dataset_name == "BACH":
+        test_loader = get_BACH_testdata_loader(data_path, transform = resize_transform,pre_processing=[], image_type_list= [magnification])
     model = classifier(10,13,11,0, model_path, device)
     model.load_state_dict(torch.load(model_path))
     model = model.to(device)
@@ -176,5 +176,8 @@ if __name__ == "__main__":
     parser.add_argument(
         '--model_path', type=str, required=True, help='The path for pretrained model'
     )
+    parser.add_argument(
+        '--dataset_name', type=str, required=True, help='Name of dataset'
+    )
     args = parser.parse_args()
-    test_model(args.test_data_fold, args.magnification, args.model_path)
+    test_model(args.test_data_fold, args.magnification, args.model_path, args.dataset_name)
