@@ -8,13 +8,17 @@ This repository code is compaitible with Python 3.6 and 3.8, Pytorch 1.2.0, and 
 
 # Commands
 
-**Modified-supervised-contrastive representation learning Phase1 (Assuming in directory 'src')** 
+**Modified-Supervised-Contrastive Representation Learning Phase1 (Assuming in directory 'src')** 
 
-```python -m self_supervised_phase1/experiments/pretrain.py --data_fold <'train_data_fold_path'>  --LR <learning_rate - 0.00001> --epoch <150> --description <'experiment_name'>```
+```python -m self_supervised_phase1/run.py --data_fold <'train_data_fold_path'>  --LR <learning_rate - 0.00001> --epoch <150> --description <'experiment_name'>```
 
-**Modified-supervised-contrastive representation learning Phase2 (Assuming in directory 'src')** 
+**Modified-Supervised-Contrastive Representation Learning Phase2 (Assuming in directory 'src')** 
 
-```python -m self_supervised_phase2/experiments/pretrain.py --data_fold <'train_data_fold_path'>  --LR <learning_rate - 0.00001> --epoch <150> --description <'experiment_name'>```
+```python -m self_supervised_phase2/run.py --data_fold <'train_data_fold_path'>  --LR <learning_rate - 0.00001> --epoch <150> --description <'experiment_name'>```
+
+**Calculate Similarity Phase (Assuming in directory 'src')** 
+
+```python -m similarity/run.py --data_fold <'train_data_fold_path'>  --LR <learning_rate - 0.00001> --epoch <150> --description <'experiment_name'>```
 
 **Fintuning using pretrained Efficient-net b2 on BreakHis (Assuming in directory 'src')**
 
