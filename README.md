@@ -1,3 +1,4 @@
+![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white) 
 # Classification of Breast Cancer Histopathology Images using a Modified Supervised Contrastive Learning Method
 
 Implemented a modified supervised contrastive learning method
